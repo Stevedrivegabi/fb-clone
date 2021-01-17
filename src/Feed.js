@@ -1,31 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Feed.css';
 import StoryReel from './StoryReel.js';
 import MessageSender from './MessageSender.js'
 import Post from './Post.js';
+import db from './firebase';
 
 function Feed() {
+    const [posts, setPosts] = useState([]);
+
+    useEffect(() => {
+        db.collection('posts')
+        .orderBy('timestamp', 'desc')
+        .onSnapshot((snapshot) => (
+            setPosts(snapshot.docs.map((doc) => 
+                ({ id: doc.id, 
+                   data: doc.data() })))
+        ));
+    }, []);
+
     return (
         <div className="feed">
             <StoryReel />
             <MessageSender />
 
-            <Post 
-                profilePic="https://website.storage/Data/DUNO/RTE/Afbeeldingen/NieuwsItem/12683/ws3.jpg"
-                message='Gang in this bitch'
-                timestamp='This is a timestamp'
-                username='Gabriel'
-                image="https://townsquare.media/site/812/files/2016/06/biggie-tupac-shakur-redman.jpg?w=980&q=75"
-            />
-            <Post 
-                profilePic="https://website.storage/Data/DUNO/RTE/Afbeeldingen/NieuwsItem/12683/ws3.jpg"
-                message='Ganging!'
-                timestamp='This is a timestamp'
-                username='Gabriel'
-            />
-            <Post />
+            {posts.map((post) => ( 
+                <Post 
+                key={post.id}
+                profilePic={post.data.profilePic}
+                message={post.data.message}
+                timestamp={post.data.timestamp}
+                username={post.data.username}
+                image={post.data.image}
+                />
+                ))}
         </div>
-    )
+    );
 }
 
 export default Feed

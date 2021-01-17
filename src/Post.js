@@ -11,7 +11,7 @@ export default function Post({ profilePic, image, username, timestamp,
                 <Avatar src={profilePic} className="post__avatar" />
                 <div className="post__topInfo">
                     <h3>{username}</h3>
-                    <p>Timestamp...</p>
+                    <p>{new Date(timestamp?.toDate()).toUTCString()}</p>
                 </div>
             </div>
 
@@ -20,7 +20,7 @@ export default function Post({ profilePic, image, username, timestamp,
             </div>
 
             <div className="post__image">
-                <img src={image} />
+                <img src={image} alt="" />
             </div>
 
             <div className="post__options">
